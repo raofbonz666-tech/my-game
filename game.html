@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لعبة الحروف</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #74ebd5, #9face6); text-align: center; padding: 50px; min-height: 100vh; margin: 0; }
+        
+        /* العبارة التفاعلية */
+        .dedication {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 3px solid #1e88e5;
+            color: #1e88e5;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .container { background: white; padding: 50px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); display: inline-block; width: 80%; max-width: 600px; }
+        .audio-btn { font-size: 100px; cursor: pointer; padding: 40px; background: #fff176; border-radius: 50%; display: inline-block; border: 8px solid #fbc02d; transition: 0.3s; }
+        .audio-btn:hover { transform: scale(1.1); background: #ffee58; }
+        .options { display: flex; justify-content: center; gap: 30px; margin-top: 50px; }
+        .opt { padding: 30px 40px; font-size: 50px; font-weight: bold; cursor: pointer; border: 5px solid #00acc1; border-radius: 25px; background: white; transition: 0.3s; flex: 1; }
+        .opt:hover { background: #00acc1; color: white; }
+        #msg { font-size: 25px; margin-top: 20px; font-weight: bold; height: 30px; }
+    </style>
+</head>
+<body>
+
+    <div class="dedication" onclick="new Audio('vine-boom-sound.mp3').play()">
+        من عبد الرؤوف إلى عبد الرحمان 🎁
+    </div>
+
+<div class="container">
+    <h1>🎈 لعبة الحروف 🎈</h1>
+    <div class="audio-btn" onclick="playAudio()">🔊</div>
+    <div id="msg">استمع للحرف ثم اختر الإجابة</div>
+    <div class="options" id="opts"></div>
+</div>
+
+<script>
+    const letters = [
+        {l:'أ', f:'001-alif.mp3'}, {l:'ب', f:'ba.mp3'}, {l:'ت', f:'003-taa.mp3'}, 
+        {l:'ث', f:'004-tha.mp3'}, {l:'ج', f:'005-jeem.mp3'}, {l:'ح', f:'006-haa.mp3'}, 
+        {l:'خ', f:'007-khaa.mp3'}, {l:'د', f:'008-dal.mp3'}, {l:'ذ', f:'009-dhal.mp3'}, 
+        {l:'ر', f:'010-raa.mp3'}, {l:'ز', f:'011-jaa.mp3'}, {l:'س', f:'012-seen.mp3'}, 
+        {l:'ش', f:'013-sheen.mp3'}, {l:'ص', f:'014-saad.mp3'}, {l:'ض', f:'015-dhaad.mp3'}, 
+        {l:'ط', f:'017-dhaa.mp3'}, {l:'ع', f:'018-ain.mp3'}, {l:'غ', f:'019-ghain.mp3'}, 
+        {l:'ف', f:'020-faa.mp3'}, {l:'ق', f:'021-qaaf.mp3'}, {l:'ك', f:'022-kaaf.mp3'}, 
+        {l:'ل', f:'023-laam.mp3'}, {l:'م', f:'024-meem.mp3'}, {l:'ن', f:'025-noon.mp3'}, 
+        {l:'و', f:'026-waw.mp3'}, {l:'هـ', f:'027-ha.mp3'}, {l:'ي', f:'029-yaa.mp3'}
+    ];
+
+    let current = 0;
+    
+    function playAudio() { new Audio(letters[current].f).play(); }
+
+    function loadGame() {
+        let container = document.getElementById('opts');
+        let msg = document.getElementById('msg');
+        container.innerHTML = '';
+        let correct = letters[current];
+        let options = [correct.l];
+        
+        while(options.length < 3) {
+            let rnd = letters[Math.floor(Math.random()*letters.length)].l;
+            if(!options.includes(rnd)) options.push(rnd);
+        }
+        
+        options.sort(() => Math.random() - 0.5).forEach(o => {
+            let div = document.createElement('div');
+            div.className = 'opt';
+            div.innerText = o;
+            div.onclick = () => {
+                if(o === correct.l) {
+                    new Audio('kaykay12-wow-171498.mp3').play();
+                    msg.innerText = "أحسنت! 🎉";
+                    msg.style.color = "green";
+                    current = (current + 1) % letters.length;
+                    setTimeout(loadGame, 1500);
+                } else {
+                    new Audio('fahhh.mp3').play();
+                    msg.innerText = "خطأ! ❌";
+                    msg.style.color = "red";
+                }
+            };
+            container.appendChild(div);
+        });
+    }
+
+    loadGame();
+</script>
+</body>
+</html>
